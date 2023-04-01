@@ -1,0 +1,33 @@
+float3 ResultTexture = Texture2DSample(Tex, TexSampler, UV);
+
+if(Count == 0)
+{
+return 0;
+}
+
+for (int i = 0; i < Count; i++)
+{
+//Inputs: Tex, UV, Center, Angle
+
+//Needed correcting the angle so it spins in a full circle
+float ang = i * Angle * 3.14 * 2;
+
+float2 angle1 = float2(sin(ang), cos(ang));
+float2 angle2 = float2(cos(ang), -sin(ang));
+
+//I had the UV as a single number var by accident
+float2 preDot = -Center + UV;
+
+float dot1 = dot(preDot, angle2);
+float dot2 = dot(preDot, angle1);
+
+float2 preRot = float2(dot1, dot2);
+float2 rot = Center + preRot;
+
+ResultTexture += Texture2DSample(Tex, TexSampler, rot);
+}
+
+return ResultTexture;
+
+
+
